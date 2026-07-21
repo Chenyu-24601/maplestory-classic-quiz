@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>冒险岛怀旧服 · 职业测试</title>
+<meta name="description" content="通过 10 道价值观 / 行为 / 审美偏好题，找到最适合你的冒险岛怀旧服职业。" />
+<style>
+  :root{
+    --bg-a:#0b1a3a;
+    --bg-b:#1f3d7a;
+    --bg-c:#3a6bcf;
+    --gold:#f5c542;
+    --gold-2:#ffd766;
+    --ink:#e9efff;
+    --ink-dim:#a9b6d6;
+    --card:rgba(255,255,255,.08);
+    --card-2:rgba(255,255,255,.14);
+    --border:rgba(255,255,255,.18);
+    --accent:#5aa9ff;
+    --danger:#ff6b6b;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;min-height:100%;-webkit-font-smoothing:antialiased}
+  body{
+    font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,-apple-system,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 800px at 15% -10%, rgba(90,169,255,.35), transparent 60%),
+      radial-gradient(1000px 700px at 100% 10%, rgba(245,197,66,.22), transparent 55%),
+      radial-gradient(900px 600px at 50% 110%, rgba(58,107,207,.4), transparent 60%),
+      linear-gradient(180deg, var(--bg-a) 0%, var(--bg-b) 55%, #0a1730 100%);
+    background-attachment:fixed;
+    overflow-x:hidden;
+  }
+  /* subtle stars */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.5), transparent 60%),
+      radial-gradient(1.5px 1.5px at 70% 20%, rgba(255,255,255,.4), transparent 60%),
+      radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,.35), transparent 60%),
+      radial-gradient(1.5px 1.5px at 85% 60%, rgba(255,255,255,.4), transparent 60%),
+      radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,.3), transparent 60%),
+      radial-gradient(2px 2px at 60% 90%, rgba(255,255,255,.45), transparent 60%);
+    opacity:.7;
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:40px 20px 80px;position:relative;z-index:1}
+  header.hero{
+    text-align:center;
+    padding:22px 12px 12px;
+  }
+  .brand-tag{
+    display:inline-block;font-size:12px;letter-spacing:.3em;
+    color:var(--gold);border:1px solid rgba(245,197,66,.4);
+    padding:6px 12px;border-radius:999px;background:rgba(245,197,66,.06);
+    text-transform:uppercase;
+  }
+  h1.title{
+    font-size:clamp(28px,5vw,44px);
+    margin:14px 0 8px;letter-spacing:2px;
+    background:linear-gradient(180deg,#ffffff 0%, var(--gold-2) 60%, var(--gold) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 4px 22px rgba(245,197,66,.25);
+    font-weight:800;
+  }
+  h1.title small{
+    display:block;font-size:14px;letter-spacing:.4em;color:var(--ink-dim);
+    font-weight:400;margin-top:6px;
+    -webkit-text-fill-color:var(--ink-dim);
+  }
+  p.lead{color:var(--ink-dim);max-width:560px;margin:14px auto 0;font-size:15px;line-height:1.7}
+
+  .card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:20px;padding:26px 22px;margin-top:24px;
+    backdrop-filter:blur(10px) saturate(140%);
+    -webkit-backdrop-filter:blur(10px) saturate(140%);
+    box-shadow:0 20px 40px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+
+  /* progress */
+  .progress{
+    display:flex;align-items:center;gap:12px;margin-bottom:18px;
+    color:var(--ink-dim);font-size:13px;
+  }
+  .progress-bar{
+    flex:1;height:6px;background:rgba(255,255,255,.1);
+    border-radius:999px;overflow:hidden;
+  }
+  .progress-bar > i{
+    display:block;height:100%;
+    background:linear-gradient(90deg,var(--accent),var(--gold));
+    width:0%;transition:width .5s cubic-bezier(.2,.9,.2,1);
+    box-shadow:0 0 12px rgba(245,197,66,.6);
+  }
+
+  .q-title{
+    font-size:22px;line-height:1.5;font-weight:700;margin:6px 0 20px;
+  }
+  .q-hint{font-size:13px;color:var(--ink-dim);margin-bottom:16px}
+
+  .options{display:grid;gap:12px}
+  .opt{
+    display:flex;align-items:center;gap:14px;
+    padding:16px 18px;border-radius:14px;cursor:pointer;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.1);
+    transition:all .25s ease;user-select:none;
+  }
+  .opt:hover{
+    background:rgba(255,255,255,.08);
+    border-color:rgba(245,197,66,.4);
+    transform:translateY(-1px);
+  }
+  .opt.selected{
+    background:linear-gradient(135deg,rgba(245,197,66,.16),rgba(90,169,255,.14));
+    border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(245,197,66,.15), 0 10px 30px rgba(245,197,66,.15);
+  }
+  .opt .dot{
+    width:22px;height:22px;flex:none;border-radius:50%;
+    border:2px solid rgba(255,255,255,.35);
+    display:grid;place-items:center;
+    transition:all .2s ease;
+  }
+  .opt.selected .dot{border-color:var(--gold);background:var(--gold)}
+  .opt.selected .dot::after{
+    content:"";width:8px;height:8px;border-radius:50%;background:#1a2a52;
+  }
+  .opt .txt{font-size:15px;line-height:1.55}
+  .opt .emoji{font-size:22px;flex:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+
+  .controls{
+    display:flex;justify-content:space-between;gap:10px;margin-top:22px;
+  }
+  .btn{
+    appearance:none;border:0;cursor:pointer;font:inherit;
+    padding:12px 22px;border-radius:12px;font-weight:600;letter-spacing:.05em;
+    transition:all .2s ease;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--gold-2),var(--gold));
+    color:#1a2952;box-shadow:0 8px 24px rgba(245,197,66,.35);
+  }
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(245,197,66,.5)}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn-ghost{
+    background:rgba(255,255,255,.06);color:var(--ink);
+    border:1px solid rgba(255,255,255,.15);
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,.12)}
+
+  /* start screen */
+  .start-cta{
+    display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:22px;
+  }
+  .meta-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px;margin-top:22px;
+  }
+  .meta-item{
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+    border-radius:12px;padding:12px 14px;text-align:center;
+  }
+  .meta-item b{display:block;color:var(--gold-2);font-size:20px}
+  .meta-item span{color:var(--ink-dim);font-size:12px;letter-spacing:.1em}
+
+  /* result */
+  .result-hero{text-align:center;padding:8px 0 14px}
+  .job-emoji{font-size:64px;line-height:1;filter:drop-shadow(0 6px 20px rgba(245,197,66,.5))}
+  .job-name{
+    font-size:32px;font-weight:800;margin:10px 0 4px;letter-spacing:2px;
+    background:linear-gradient(180deg,#ffffff,var(--gold));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .job-cat{color:var(--ink-dim);font-size:14px;letter-spacing:.3em}
+  .stars{margin:12px 0;font-size:18px;letter-spacing:2px}
+  .star-row{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:8px}
+  .star-row span{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:6px 12px;font-size:12px;color:var(--ink-dim)}
+  .star-row b{color:var(--gold-2);margin-left:6px}
+
+  .reason{
+    margin-top:20px;padding:18px;border-radius:14px;
+    background:linear-gradient(135deg,rgba(90,169,255,.1),rgba(245,197,66,.06));
+    border:1px solid rgba(90,169,255,.25);
+    line-height:1.75;font-size:15px;
+  }
+  .reason .label{
+    display:inline-block;font-size:11px;letter-spacing:.3em;
+    color:var(--gold);margin-bottom:8px;
+  }
+  .pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .pros-cons > div{
+    padding:14px;border-radius:12px;font-size:13px;line-height:1.6;
+  }
+  .pros{background:rgba(90,255,169,.08);border:1px solid rgba(90,255,169,.2)}
+  .cons{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.2)}
+  .pros h4,.cons h4{margin:0 0 6px;font-size:12px;letter-spacing:.2em}
+  .pros h4{color:#7dffb3}.cons h4{color:#ffa5a5}
+
+  .runner-ups{margin-top:20px}
+  .runner-ups h3{font-size:13px;letter-spacing:.3em;color:var(--ink-dim);margin:0 0 10px;font-weight:600}
+  .runner-list{display:flex;gap:10px;flex-wrap:wrap}
+  .runner-tag{
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+    border-radius:999px;padding:8px 14px;font-size:13px;
+  }
+  .runner-tag b{color:var(--gold-2);margin-right:6px}
+
+  .share-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+
+  footer{
+    text-align:center;color:var(--ink-dim);font-size:12px;
+    margin-top:40px;padding-bottom:20px;letter-spacing:.1em;
+  }
+  footer a{color:var(--gold-2);text-decoration:none}
+
+  @media (max-width:520px){
+    .pros-cons{grid-template-columns:1fr}
+    .q-title{font-size:19px}
+    .job-name{font-size:26px}
+    .card{padding:22px 16px}
+  }
+
+  /* transition */
+  .fade{animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <header class="hero">
+    <div class="brand-tag">MapleStory · Nostalgia</div>
+    <h1 class="title">冒险岛怀旧服 · 职业倾向测试<small>Find Your Class</small></h1>
+    <p class="lead">10 道关于价值观、行为习惯与审美偏好的问题，为你匹配 12 个职业中最贴近内心的那个。</p>
+  </header>
+  <main id="stage"></main>
+  <footer>
+    数据参考国服怀旧服职业总览 · 本测试仅供娱乐 ·
+    <a href="#" id="restart-link">重新测试</a>
+  </footer>
+</div>
+
+<script>
+/* ============ 职业数据 ============ */
+const CLASSES = {
+  darkKnight: {
+    id:"darkKnight",name:"黑骑士",cat:"战士系",emoji:"🐉",
+    role:"刷子 + 团队 BUFF",
+    stars:{farm:4,late:3},
+    tagline:"三转龙咆哮响起的那一刻，团队后排血条被扛住了。",
+    pros:["高生存 · 群攻强","团队刚需 BUFF (HB)","肉度可观，抗压不虚"],
+    cons:["前期升级偏慢","耗药多，需要一定经济储备"],
+    reason:"你重视团队价值，喜欢站在前排承担与支援并存的角色。黑骑士给你厚血、群攻、和一个 '没我不行' 的关键 BUFF——这正是你想要的存在感。"
+  },
+  hero: {
+    id:"hero",name:"英雄",cat:"战士系",emoji:"⚔️",
+    role:"后期强力单挑输出",
+    stars:{farm:1,late:5},
+    tagline:"前期熬得住，四转以后一刀一个 BOSS。",
+    pros:["后期爆发极强","BOSS 战数一数二","硬派近战手感"],
+    cons:["四转前练级痛苦","强度高度依赖装备"],
+    reason:"你崇尚 '大器晚成'，能忍前期的苦、追后期的爽。英雄是典型的装备党大哥——你愿意为一把神器付出，那这把武器最终会替你说话。"
+  },
+  paladin: {
+    id:"paladin",name:"圣骑士",cat:"战士系",emoji:"🛡️",
+    role:"团队核心 · 肉盾",
+    stars:{farm:1,late:2},
+    tagline:"我抗，你打。挡在最前面才是我该在的位置。",
+    pros:["防御突出，几乎不倒","团队辅助核心","光明系视觉，正气凛然"],
+    cons:["输出偏低","单人练级效率一般"],
+    reason:"你把 '让队友能安心输出' 看得比自己刷分更重要。圣骑士的价值不在伤害面板，而在于——只要你在，团队就成立。"
+  },
+  iceMage: {
+    id:"iceMage",name:"冰雷法师",cat:"法师系",emoji:"❄️",
+    role:"顶级刷图 · 零氪友好",
+    stars:{farm:5,late:1},
+    tagline:"寒冰控场，闪电横扫，怪都还没走近就没了。",
+    pros:["群攻效率顶尖","控场能力强","零氪也能玩得爽"],
+    cons:["转职前期无 AOE","身板脆，站桩风险高"],
+    reason:"你冷静、讲策略、看重性价比。冰雷是给聪明玩家的答案——用最少的钱，把地图上的怪清得最干净。"
+  },
+  fpMage: {
+    id:"fpMage",name:"火毒法师",cat:"法师系",emoji:"🔥",
+    role:"持续伤害 · 破防神器",
+    stars:{farm:2,late:1},
+    tagline:"你被点着了。慢慢烧吧。",
+    pros:["持续伤害稳定","破防机制强，克 BOSS","单挑更有仪式感"],
+    cons:["前期练级痛苦","单体为主，群刷偏弱"],
+    reason:"你偏爱慢工出细活，追求 '让敌人生不如死' 的掌控感。火毒不图一波带走，图的是那口毒烧完之后的胜利。"
+  },
+  cleric: {
+    id:"cleric",name:"牧师",cat:"法师系",emoji:"✨",
+    role:"团队核心辅助",
+    stars:{farm:4,late:1},
+    tagline:"带老板 · 抬棺材 · 加满血——收益稳到不像话。",
+    pros:["团队核心辅助","带队收益稳定","组队人缘天然爆棚"],
+    cons:["单体输出弱","个人时间不组队会寂寞"],
+    reason:"你享受被依赖，享受 '因为有我，大家才能推进'。牧师不是最亮的那颗星，但是把星空缝合起来的那根线。"
+  },
+  sniper: {
+    id:"sniper",name:"神射手",cat:"弓箭手系",emoji:"🎯",
+    role:"精准远程输出",
+    stars:{farm:3,late:4.5},
+    tagline:"火眼金睛开启，一箭穿三层甲。",
+    pros:["远程安全，走位灵活","暴击机制强大","BOSS 战输出可观"],
+    cons:["2 转攻击略低","身板略脆需走位"],
+    reason:"你冷静、克制、追求 '一箭定胜负' 的精度。神射手就是给这种人准备的：不贴脸、不慌，把伤害稳稳丢进最要害的那个位置。"
+  },
+  marksman: {
+    id:"marksman",name:"箭神",cat:"弓箭手系",emoji:"🏹",
+    role:"群攻清怪 · 稳健输出",
+    stars:{farm:3,late:4},
+    tagline:"一次拉满，一片放倒。",
+    pros:["群攻优秀","清怪效率高","远程安全"],
+    cons:["攻速慢，手感需要适应","单体爆发中等"],
+    reason:"你想要一个 '什么活都能干' 的稳定型职业——刷图能刷、单挑能打、还不用贴脸。箭神就是那种没有短板的六边形战士。"
+  },
+  hermit: {
+    id:"hermit",name:"隐士",cat:"飞侠系",emoji:"🥷",
+    role:"暴击刺客",
+    stars:{farm:1,late:5},
+    tagline:"你甚至没看清是谁——但你已经死了。",
+    pros:["暴击伤害最高","机动性拉满","走位飘逸，帅"],
+    cons:["氪金需求极高","前期非常脆"],
+    reason:"你追求极致——极致的伤害、极致的操作、极致的爽。隐士是这个游戏里最贵、也最帅的答案。愿意烧钱？那就没有对手了。"
+  },
+  bandit: {
+    id:"bandit",name:"侠盗",cat:"飞侠系",emoji:"🗡️",
+    role:"打宝独狼首选",
+    stars:{farm:2,late:4.5},
+    tagline:"我不带队，但队里没人比我更会捡钱。",
+    pros:["打宝效率极高","独狼首选","后期输出爆炸"],
+    cons:["前期技能伤害一般","上手曲线较陡"],
+    reason:"你是那种 '一个人也能玩得很爽' 的人，看重实实在在的收益。侠盗把 '独狼 + 财富' 两件事同时给你——你不需要队友喝彩，装备栏说话。"
+  },
+  buccaneer: {
+    id:"buccaneer",name:"冲锋队长",cat:"海盗系",emoji:"👊",
+    role:"格斗系 · 偏辅助",
+    stars:{farm:1,late:4.5},
+    tagline:"急速领域一开，兄弟们全体加速。",
+    pros:["打击感一流","玩法新颖 (能量系统)","急速领域带全队"],
+    cons:["能量系统需要适应","前期伤害偏低"],
+    reason:"你喜欢新鲜、喜欢硬派、喜欢那种 '一拳打下去屏幕都在震' 的手感。冲锋队长是海盗系里最有个性的选择——不套路，够硬。"
+  },
+  corsair: {
+    id:"corsair",name:"船长",cat:"海盗系",emoji:"🔫",
+    role:"火枪远程输出",
+    stars:{farm:1,late:4.5},
+    tagline:"装备便宜、后期能打、气质拉满。",
+    pros:["四转后输出强力","装备门槛低，性价比高","远程安全 + 海盗气质"],
+    cons:["前期伤害偏低","真正起飞时间靠后"],
+    reason:"你耐得住寂寞、看得懂 '慢就是快'——不追求前期领跑，等到装备平价的那一天，你比谁都轻松地站到了顶端。"
+  }
+};
+
+/* ============ 题目 ============ */
+const QUESTIONS = [
+  {
+    q:"你在冒险岛里最享受的时刻是——",
+    hint:"选一个最戳到你的",
+    options:[
+      { e:"💥", t:"一刀 999，秒杀 BOSS 的爽感", s:{hero:3, hermit:2, corsair:1} },
+      { e:"💰", t:"收获稀有掉落，发家致富", s:{bandit:3, corsair:1, marksman:1} },
+      { e:"🤝", t:"队友说 '多亏有你'，被依赖的感觉", s:{cleric:3, paladin:2, darkKnight:2} },
+      { e:"🎆", t:"屏幕上炸开一大片伤害数字", s:{iceMage:3, marksman:2, darkKnight:1} }
+    ]
+  },
+  {
+    q:"面对一整片小怪，你的处理方式？",
+    hint:"你的直觉行为",
+    options:[
+      { e:"🌀", t:"冲进去用大范围技能一波清场", s:{iceMage:3, marksman:2, darkKnight:1, buccaneer:1} },
+      { e:"🎯", t:"拉开距离，一个个精确点掉", s:{sniper:3, fpMage:2, corsair:1} },
+      { e:"👻", t:"闪身穿梭，逐个背刺", s:{hermit:3, bandit:2} },
+      { e:"🥊", t:"贴脸猛砸，享受打击反馈", s:{buccaneer:3, hero:2, darkKnight:1} }
+    ]
+  },
+  {
+    q:"对游戏投入，你的态度更接近——",
+    hint:"钱包的真实想法",
+    options:[
+      { e:"🌱", t:"零氪或微氪，靠时间和策略", s:{iceMage:3, cleric:2, corsair:2, buccaneer:1} },
+      { e:"⚖️", t:"适度氪金，追求性价比", s:{bandit:2, marksman:2, sniper:1, corsair:1} },
+      { e:"💎", t:"只要够强，钱不是问题", s:{hermit:3, hero:2, fpMage:1} }
+    ]
+  },
+  {
+    q:"你更喜欢哪种游戏节奏？",
+    hint:"从新手到大佬的曲线",
+    options:[
+      { e:"🌅", t:"前期弱一点没关系，大器晚成才够爽", s:{hero:3, corsair:3, buccaneer:1, hermit:1} },
+      { e:"🚀", t:"从头到尾都要强，不要有明显短板", s:{iceMage:2, sniper:2, marksman:2, darkKnight:1} },
+      { e:"🎁", t:"前期冲一波，中后期转辅助收益", s:{cleric:2, darkKnight:2, paladin:1} }
+    ]
+  },
+  {
+    q:"组队时你想扮演什么角色？",
+    hint:"队伍里的定位",
+    options:[
+      { e:"🛡️", t:"冲在最前扛伤害的坦克", s:{paladin:3, darkKnight:2} },
+      { e:"💫", t:"后排给队友加血 / 加 BUFF", s:{cleric:3, paladin:1, darkKnight:1, buccaneer:1} },
+      { e:"⚡", t:"输出全场的主 C", s:{hero:2, hermit:2, sniper:2, marksman:1, corsair:1} },
+      { e:"🎒", t:"我更喜欢自己单干", s:{bandit:3, fpMage:2, hermit:1} }
+    ]
+  },
+  {
+    q:"你偏爱的战斗距离？",
+    hint:"你和敌人之间的距离美学",
+    options:[
+      { e:"👊", t:"贴脸近战，感受每一击", s:{hero:2, buccaneer:3, darkKnight:1, paladin:1} },
+      { e:"🌀", t:"中距离灵活切入", s:{hermit:2, bandit:2, paladin:1, buccaneer:1} },
+      { e:"🎯", t:"远距离精确打击", s:{sniper:2, marksman:2, corsair:2, iceMage:1, fpMage:1} }
+    ]
+  },
+  {
+    q:"视觉审美上你更被哪种风格吸引？",
+    hint:"看图选职业其实很准",
+    options:[
+      { e:"❄️", t:"冷色系 · 冰霜与闪电", s:{iceMage:3} },
+      { e:"🔥", t:"火焰、毒雾、暗黑气场", s:{fpMage:3, hermit:1} },
+      { e:"👼", t:"圣光、金色、天使系", s:{paladin:3, cleric:2} },
+      { e:"🐉", t:"黑甲、龙纹、王者气场", s:{darkKnight:3, hero:2} },
+      { e:"🍃", t:"弓弩、羽毛、自然系", s:{sniper:2, marksman:2} },
+      { e:"🏴‍☠️", t:"火枪、船锚、海盗旗", s:{corsair:3, buccaneer:2} }
+    ]
+  },
+  {
+    q:"你的社交倾向？",
+    hint:"和别人玩还是自己玩",
+    options:[
+      { e:"🌚", t:"独狼，一个人玩最自在", s:{bandit:3, fpMage:2, hermit:1, corsair:1} },
+      { e:"👯", t:"三两好友组个小队最合适", s:{sniper:2, marksman:2, hero:1, iceMage:1} },
+      { e:"🎉", t:"大团队，越热闹越好", s:{cleric:3, paladin:2, darkKnight:2, buccaneer:1} }
+    ]
+  },
+  {
+    q:"遇到超强 BOSS 你的第一反应？",
+    hint:"面对困难时的样子",
+    options:[
+      { e:"😤", t:"硬刚，越难越有斗志", s:{hero:3, hermit:1, buccaneer:1} },
+      { e:"🎯", t:"冷静走位放风筝", s:{sniper:2, marksman:2, iceMage:1, corsair:1} },
+      { e:"📣", t:"招呼队友一起，我来抗/加血", s:{paladin:3, cleric:2, darkKnight:1} },
+      { e:"🏃", t:"找机会打完就跑，收益最重要", s:{bandit:2, corsair:1, fpMage:1} }
+    ]
+  },
+  {
+    q:"一句话形容你理想中的自己？",
+    hint:"最后一题，凭直觉",
+    options:[
+      { e:"💪", t:"力拔山兮气盖世", s:{hero:3, darkKnight:1, buccaneer:1} },
+      { e:"🧠", t:"智珠在握，运筹帷幄", s:{iceMage:3, fpMage:1, sniper:1} },
+      { e:"💖", t:"无欲则刚，为友谊而战", s:{cleric:3, paladin:2} },
+      { e:"🌑", t:"神出鬼没，一击致命", s:{hermit:3, bandit:1} },
+      { e:"🎯", t:"万军之中取上将首级", s:{sniper:2, marksman:2, hero:1} },
+      { e:"🌊", t:"乘风破浪，自由不羁", s:{corsair:2, buccaneer:2, bandit:1} }
+    ]
+  }
+];
+
+/* ============ 状态 ============ */
+const state = {
+  step:-1,   // -1 = intro; 0..N-1 = questions; N = result
+  answers:new Array(QUESTIONS.length).fill(null),
+  scores:{},
+};
+
+function resetScores(){
+  state.scores = {};
+  for (const k in CLASSES) state.scores[k] = 0;
+}
+
+/* ============ 渲染 ============ */
+const stage = document.getElementById("stage");
+
+function render(){
+  stage.innerHTML = "";
+  if (state.step === -1) return renderIntro();
+  if (state.step === QUESTIONS.length) return renderResult();
+  renderQuestion(state.step);
+}
+
+function renderIntro(){
+  const el = document.createElement("div");
+  el.className = "card fade";
+  el.innerHTML = `
+    <div class="meta-grid">
+      <div class="meta-item"><b>10</b><span>QUESTIONS</span></div>
+      <div class="meta-item"><b>12</b><span>CLASSES</span></div>
+      <div class="meta-item"><b>≈ 2</b><span>MINUTES</span></div>
+      <div class="meta-item"><b>0¥</b><span>NO PAYWALL</span></div>
+    </div>
+    <p style="margin-top:22px;line-height:1.75;color:var(--ink-dim);font-size:14px">
+      冒险岛怀旧服里 <b style="color:var(--gold-2)">五大职业系 · 十二个代表职业</b> 各有性格：
+      有拼团队的、有走独狼的，有靠肝的、有靠氪的，也有前期忍着后期起飞的。
+      这套测试不问你会不会玩，只问你 <b style="color:var(--gold-2)">是什么样的人</b>——然后给你一个最像你的答案。
+    </p>
+    <div class="start-cta">
+      <button class="btn btn-primary" id="btn-start">开 始 测 试</button>
+    </div>
+  `;
+  stage.appendChild(el);
+  el.querySelector("#btn-start").onclick = ()=>{
+    resetScores();
+    state.step = 0;
+    render();
+  };
+}
+
+function renderQuestion(i){
+  const q = QUESTIONS[i];
+  const el = document.createElement("div");
+  el.className = "card fade";
+  el.innerHTML = `
+    <div class="progress">
+      <span>Q ${i+1} / ${QUESTIONS.length}</span>
+      <div class="progress-bar"><i style="width:${((i)/QUESTIONS.length)*100}%"></i></div>
+      <span>${Math.round(((i)/QUESTIONS.length)*100)}%</span>
+    </div>
+    <div class="q-title">${q.q}</div>
+    <div class="q-hint">${q.hint}</div>
+    <div class="options" id="opts"></div>
+    <div class="controls">
+      <button class="btn btn-ghost" id="btn-back" ${i===0?"disabled style='visibility:hidden'":""}>上一题</button>
+      <button class="btn btn-primary" id="btn-next" disabled>${i===QUESTIONS.length-1?"看结果 →":"下一题 →"}</button>
+    </div>
+  `;
+  stage.appendChild(el);
+
+  const optsEl = el.querySelector("#opts");
+  q.options.forEach((opt, idx)=>{
+    const d = document.createElement("div");
+    d.className = "opt" + (state.answers[i]===idx ? " selected":"");
+    d.innerHTML = `<span class="dot"></span><span class="emoji">${opt.e}</span><span class="txt">${opt.t}</span>`;
+    d.onclick = ()=>{
+      state.answers[i] = idx;
+      [...optsEl.children].forEach(c=>c.classList.remove("selected"));
+      d.classList.add("selected");
+      el.querySelector("#btn-next").disabled = false;
+    };
+    optsEl.appendChild(d);
+  });
+
+  if (state.answers[i]!==null) el.querySelector("#btn-next").disabled = false;
+
+  el.querySelector("#btn-back").onclick = ()=>{
+    state.step--;
+    render();
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+  el.querySelector("#btn-next").onclick = ()=>{
+    const chosenIdx = state.answers[i];
+    if (chosenIdx===null) return;
+    // (rebuild scores from all answers so back-navigation is safe)
+    resetScores();
+    for (let k=0;k<=i;k++){
+      const idx = state.answers[k];
+      if (idx===null) continue;
+      const s = QUESTIONS[k].options[idx].s;
+      for (const cls in s) state.scores[cls] += s[cls];
+    }
+    state.step++;
+    render();
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+}
+
+function renderResult(){
+  // pick top
+  const ranked = Object.entries(state.scores)
+    .sort((a,b)=>b[1]-a[1])
+    .filter(([,v])=>v>0);
+  const [topId, topScore] = ranked[0];
+  const top = CLASSES[topId];
+  const runners = ranked.slice(1,4).map(([id,v])=>({...CLASSES[id],score:v}));
+
+  const el = document.createElement("div");
+  el.className = "card fade";
+  el.innerHTML = `
+    <div class="result-hero">
+      <div class="job-emoji">${top.emoji}</div>
+      <div class="job-name">${top.name}</div>
+      <div class="job-cat">${top.cat} · ${top.role}</div>
+      <div class="star-row">
+        <span>刷图 <b>${"★".repeat(Math.round(top.stars.farm))}${"☆".repeat(5-Math.round(top.stars.farm))}</b></span>
+        <span>后期 <b>${"★".repeat(Math.round(top.stars.late))}${"☆".repeat(5-Math.round(top.stars.late))}</b></span>
+        <span>匹配度 <b>${topScore} 分</b></span>
+      </div>
+      <p style="color:var(--ink-dim);font-style:italic;margin:12px 0 0">"${top.tagline}"</p>
+    </div>
+
+    <div class="reason">
+      <div class="label">◆ 为什么是它</div>
+      ${top.reason}
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>核心优势</h4>
+        ${top.pros.map(p=>"· "+p).join("<br>")}
+      </div>
+      <div class="cons">
+        <h4>主要劣势</h4>
+        ${top.cons.map(p=>"· "+p).join("<br>")}
+      </div>
+    </div>
+
+    ${runners.length ? `
+      <div class="runner-ups">
+        <h3>你的次选</h3>
+        <div class="runner-list">
+          ${runners.map(r=>`<span class="runner-tag"><b>${r.emoji} ${r.name}</b> ${r.score} 分 · ${r.cat}</span>`).join("")}
+        </div>
+      </div>
+    ` : ""}
+
+    <div class="share-row">
+      <button class="btn btn-ghost" id="btn-share">复制结果</button>
+      <button class="btn btn-primary" id="btn-again">再测一次</button>
+    </div>
+  `;
+  stage.appendChild(el);
+
+  el.querySelector("#btn-again").onclick = ()=>{
+    state.step = -1;
+    state.answers = new Array(QUESTIONS.length).fill(null);
+    resetScores();
+    render();
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+  el.querySelector("#btn-share").onclick = async ()=>{
+    const text = `我在《冒险岛怀旧服职业测试》里的结果是 【${top.name}】(${top.cat}) —— ${top.tagline}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      el.querySelector("#btn-share").textContent = "已复制 ✓";
+    } catch(e) {
+      alert(text);
+    }
+  };
+}
+
+/* restart footer link */
+document.getElementById("restart-link").onclick = (e)=>{
+  e.preventDefault();
+  state.step = -1;
+  state.answers = new Array(QUESTIONS.length).fill(null);
+  resetScores();
+  render();
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+render();
+</script>
+</body>
+</html>
