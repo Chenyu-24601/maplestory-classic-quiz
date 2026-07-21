@@ -203,7 +203,14 @@
     filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));
   }
   .class-strip .slot span{font-size:10px;color:var(--ink-dim);letter-spacing:.05em}
+  .class-strip .slot small{
+    font-size:8.5px;color:rgba(245,197,66,.7);letter-spacing:0;
+    line-height:1.2;text-align:center;
+    display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;
+    overflow:hidden;max-width:100%;
+  }
   .class-strip .slot:hover{transform:translateY(-2px);border-color:rgba(245,197,66,.4)}
+  .class-strip .slot:hover small{color:var(--gold-2)}
   @media (max-width:520px){
     .class-strip{grid-template-columns:repeat(4,1fr)}
     .meta-grid{grid-template-columns:repeat(2,1fr)}
@@ -246,6 +253,14 @@
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
   .job-cat{color:var(--ink-dim);font-size:13px;letter-spacing:.3em}
+  .weapon-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    margin-top:10px;padding:5px 12px;border-radius:999px;
+    background:linear-gradient(135deg,rgba(245,197,66,.14),rgba(90,169,255,.08));
+    border:1px solid rgba(245,197,66,.3);
+    font-size:12px;letter-spacing:.05em;color:var(--gold-2);
+  }
+  .weapon-badge::before{content:"◈";color:var(--gold);font-size:10px}
   .star-row{
     display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px;
   }
@@ -381,7 +396,7 @@ const CLASSES = {
     id:"darkKnight",name:"黑骑士",cat:"战士系",emoji:"🐉",
     role:"刷子 + 团队 BUFF",
     stars:{farm:4,late:3},
-    item:1432000, // spear
+    item:1432038, weapon:"龙魂战戟 · 奥丁戟",
     tagline:"三转龙咆哮响起的那一刻，团队后排血条被扛住了。",
     pros:["高生存 · 群攻强","团队刚需 BUFF (HB)","肉度可观，抗压不虚"],
     cons:["前期升级偏慢","耗药多，需要一定经济储备"],
@@ -391,7 +406,7 @@ const CLASSES = {
     id:"hero",name:"英雄",cat:"战士系",emoji:"⚔️",
     role:"后期强力单挑输出",
     stars:{farm:1,late:5},
-    item:1402000, // 2H sword
+    item:1402046, weapon:"时空之剑 · 霸王剑",
     tagline:"前期熬得住，四转以后一刀一个 BOSS。",
     pros:["后期爆发极强","BOSS 战数一数二","硬派近战手感"],
     cons:["四转前练级痛苦","强度高度依赖装备"],
@@ -401,7 +416,7 @@ const CLASSES = {
     id:"paladin",name:"圣骑士",cat:"战士系",emoji:"🛡️",
     role:"团队核心 · 肉盾",
     stars:{farm:1,late:2},
-    item:1302000, // 1H sword
+    item:1322060, weapon:"时空圣焰锤",
     tagline:"我抗，你打。挡在最前面才是我该在的位置。",
     pros:["防御突出，几乎不倒","团队辅助核心","光明系视觉，正气凛然"],
     cons:["输出偏低","单人练级效率一般"],
@@ -411,7 +426,7 @@ const CLASSES = {
     id:"iceMage",name:"冰雷法师",cat:"法师系",emoji:"❄️",
     role:"顶级刷图 · 零氪友好",
     stars:{farm:5,late:1},
-    item:1382000, // staff
+    item:1382050, weapon:"极致元素法杖 · 冰霜之心",
     tagline:"寒冰控场，闪电横扫，怪都还没走近就没了。",
     pros:["群攻效率顶尖","控场能力强","零氪也能玩得爽"],
     cons:["转职前期无 AOE","身板脆，站桩风险高"],
@@ -421,7 +436,7 @@ const CLASSES = {
     id:"fpMage",name:"火毒法师",cat:"法师系",emoji:"🔥",
     role:"持续伤害 · 破防神器",
     stars:{farm:2,late:1},
-    item:1372000, // wand
+    item:1382060, weapon:"深红奥秘杖 · 焚天",
     tagline:"你被点着了。慢慢烧吧。",
     pros:["持续伤害稳定","破防机制强，克 BOSS","单挑更有仪式感"],
     cons:["前期练级痛苦","单体为主，群刷偏弱"],
@@ -431,7 +446,7 @@ const CLASSES = {
     id:"cleric",name:"牧师",cat:"法师系",emoji:"✨",
     role:"团队核心辅助",
     stars:{farm:4,late:1},
-    item:1382001, // holy-style staff
+    item:1372040, weapon:"元素魔杖 · 命运权杖",
     tagline:"带老板 · 抬棺材 · 加满血——收益稳到不像话。",
     pros:["团队核心辅助","带队收益稳定","组队人缘天然爆棚"],
     cons:["单体输出弱","个人时间不组队会寂寞"],
@@ -441,7 +456,7 @@ const CLASSES = {
     id:"sniper",name:"神射手",cat:"弓箭手系",emoji:"🎯",
     role:"精准远程输出",
     stars:{farm:3,late:4.5},
-    item:1452000, // bow
+    item:1452060, weapon:"深红长弓 · 赤羽",
     tagline:"火眼金睛开启，一箭穿三层甲。",
     pros:["远程安全，走位灵活","暴击机制强大","BOSS 战输出可观"],
     cons:["2 转攻击略低","身板略脆需走位"],
@@ -451,7 +466,7 @@ const CLASSES = {
     id:"marksman",name:"箭神",cat:"弓箭手系",emoji:"🏹",
     role:"群攻清怪 · 稳健输出",
     stars:{farm:3,late:4},
-    item:1462000, // crossbow
+    item:1462053, weapon:"暗夜渡鸦之瞳",
     tagline:"一次拉满，一片放倒。",
     pros:["群攻优秀","清怪效率高","远程安全"],
     cons:["攻速慢，手感需要适应","单体爆发中等"],
@@ -461,7 +476,7 @@ const CLASSES = {
     id:"hermit",name:"隐士",cat:"飞侠系",emoji:"🥷",
     role:"暴击刺客",
     stars:{farm:1,late:5},
-    item:1472000, // claw
+    item:1472053, weapon:"血鸦之爪 · 大圣月牙",
     tagline:"你甚至没看清是谁——但你已经死了。",
     pros:["暴击伤害最高","机动性拉满","走位飘逸，帅"],
     cons:["氪金需求极高","前期非常脆"],
@@ -471,7 +486,7 @@ const CLASSES = {
     id:"bandit",name:"侠盗",cat:"飞侠系",emoji:"🗡️",
     role:"打宝独狼首选",
     stars:{farm:2,late:4.5},
-    item:1332000, // dagger
+    item:1332050, weapon:"龙翼短匕 · 达摩克利斯",
     tagline:"我不带队，但队里没人比我更会捡钱。",
     pros:["打宝效率极高","独狼首选","后期输出爆炸"],
     cons:["前期技能伤害一般","上手曲线较陡"],
@@ -481,7 +496,7 @@ const CLASSES = {
     id:"buccaneer",name:"冲锋队长",cat:"海盗系",emoji:"👊",
     role:"格斗系 · 偏辅助",
     stars:{farm:1,late:4.5},
-    item:1482000, // knuckle
+    item:1482013, weapon:"龙裂拳套 · 破军",
     tagline:"急速领域一开，兄弟们全体加速。",
     pros:["打击感一流","玩法新颖 (能量系统)","急速领域带全队"],
     cons:["能量系统需要适应","前期伤害偏低"],
@@ -491,7 +506,7 @@ const CLASSES = {
     id:"corsair",name:"船长",cat:"海盗系",emoji:"🔫",
     role:"火枪远程输出",
     stars:{farm:1,late:4.5},
-    item:1492000, // gun
+    item:1492012, weapon:"协奏曲 · 无限之怒",
     tagline:"装备便宜、后期能打、气质拉满。",
     pros:["四转后输出强力","装备门槛低，性价比高","远程安全 + 海盗气质"],
     cons:["前期伤害偏低","真正起飞时间靠后"],
@@ -604,9 +619,10 @@ function renderIntro(){
   el.className = "card fade";
   const strip = CLASS_ORDER.map(id=>{
     const c = CLASSES[id];
-    return `<div class="slot" title="${c.name}">
+    return `<div class="slot" title="${c.name} · ${c.weapon}">
       <img loading="lazy" src="${IMG}${c.item}${R}" alt="${c.name}" />
       <span>${c.name}</span>
+      <small>${c.weapon.split(" · ")[0]}</small>
     </div>`;
   }).join("");
   el.innerHTML = `
@@ -715,6 +731,7 @@ function renderResult(){
       </div>
       <div class="job-name">${top.name}</div>
       <div class="job-cat">${top.cat} · ${top.role}</div>
+      <div class="weapon-badge">标志武器 · ${top.weapon}</div>
       <div class="star-row">
         <span>刷图 <b>${"★".repeat(Math.round(top.stars.farm))}${"☆".repeat(5-Math.round(top.stars.farm))}</b></span>
         <span>后期 <b>${"★".repeat(Math.round(top.stars.late))}${"☆".repeat(5-Math.round(top.stars.late))}</b></span>
