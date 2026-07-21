@@ -278,6 +278,41 @@
     font-size:11px;letter-spacing:.35em;color:var(--ink-dim);
     margin:0 0 8px;font-weight:600;
   }
+  .match-dist{margin-top:16px}
+  .match-dist h3{
+    font-size:11px;letter-spacing:.35em;color:var(--ink-dim);
+    margin:0 0 10px;font-weight:600;display:flex;align-items:center;gap:8px;
+  }
+  .match-dist h3 .hint{font-size:10px;letter-spacing:.1em;color:rgba(169,182,214,.6);font-weight:400;text-transform:none}
+  .match-row{
+    display:grid;grid-template-columns:26px 74px 1fr 46px;
+    gap:10px;align-items:center;
+    padding:4px 0;font-size:12.5px;
+  }
+  .match-row img{width:26px;height:26px;object-fit:contain;image-rendering:pixelated;opacity:.85}
+  .match-row .n{color:var(--ink-dim);letter-spacing:.05em}
+  .match-row .b{
+    height:6px;background:rgba(255,255,255,.08);
+    border-radius:999px;overflow:hidden;
+  }
+  .match-row .b i{
+    display:block;height:100%;width:0;
+    background:linear-gradient(90deg,var(--accent),var(--gold));
+    border-radius:999px;
+    animation:barfill .9s cubic-bezier(.2,.9,.2,1) forwards;
+  }
+  .match-row .p{
+    text-align:right;color:var(--ink-dim);
+    font-variant-numeric:tabular-nums;font-size:12px;
+  }
+  .match-row.top .n{color:var(--gold-2);font-weight:700}
+  .match-row.top .p{color:var(--gold-2);font-weight:700}
+  .match-row.top .b i{box-shadow:0 0 12px rgba(245,197,66,.55)}
+  .match-row.top img{opacity:1;filter:drop-shadow(0 2px 6px rgba(245,197,66,.5))}
+  @keyframes barfill{from{width:0} to{width:var(--pct)}}
+  @media (max-width:520px){
+    .match-row{grid-template-columns:24px 62px 1fr 42px;font-size:11.5px}
+  }
   .runner-list{display:flex;gap:8px;flex-wrap:wrap}
   .runner-tag{
     background:rgba(255,255,255,.05);border:1px solid var(--border);
@@ -507,14 +542,14 @@ const QUESTIONS = [
       { e:"🌀", t:"中距离灵活切入", s:{hermit:2, bandit:2, paladin:1, buccaneer:1} },
       { e:"🎯", t:"远距离精确打击", s:{sniper:2, marksman:2, corsair:2, iceMage:1, fpMage:1} }
     ]},
-  { q:"视觉审美上你更被哪种风格吸引？", hint:"看图选职业其实很准",
+  { q:"下面 6 幅画面，哪个你最想在里面待一会儿？", hint:"选让你觉得舒服 / 兴奋的氛围",
     options:[
-      { e:"❄️", t:"冷色系 · 冰霜与闪电", s:{iceMage:3} },
-      { e:"🔥", t:"火焰、毒雾、暗黑气场", s:{fpMage:3, hermit:1} },
-      { e:"👼", t:"圣光、金色、天使系", s:{paladin:3, cleric:2} },
-      { e:"🐉", t:"黑甲、龙纹、王者气场", s:{darkKnight:3, hero:2} },
-      { e:"🍃", t:"弓弩、羽毛、自然系", s:{sniper:2, marksman:2} },
-      { e:"🏴‍☠️", t:"火枪、船锚、海盗旗", s:{corsair:3, buccaneer:2} }
+      { e:"🌌", t:"深冬清晨的湖面，薄雾还没散", s:{iceMage:3, sniper:1, hermit:1} },
+      { e:"🌋", t:"火山口的黄昏，红光把云染透", s:{fpMage:3, hero:1, buccaneer:1} },
+      { e:"⛩️", t:"山顶古庙，钟声余音未散", s:{paladin:2, cleric:2, marksman:1} },
+      { e:"🌙", t:"悬崖边一棵枯树，孤月当空", s:{hermit:2, darkKnight:2, bandit:1, hero:1} },
+      { e:"🌿", t:"阳光穿过苍翠山谷的树梢", s:{sniper:2, marksman:2, cleric:1} },
+      { e:"🎆", t:"深夜港口，烟火倒映水面", s:{corsair:2, buccaneer:2, bandit:1} }
     ]},
   { q:"你的社交倾向？", hint:"和别人玩还是自己玩",
     options:[
@@ -653,11 +688,23 @@ function renderQuestion(i){
   };
 }
 
+function softmax(entries, T=3){
+  if (!entries.length) return [];
+  const maxV = Math.max(...entries.map(([,v])=>v));
+  const exps = entries.map(([k,v])=>[k, Math.exp((v - maxV)/T)]);
+  const sum = exps.reduce((a,[,v])=>a+v, 0);
+  return exps.map(([k,v])=>[k, v/sum]);
+}
+
 function renderResult(){
   const ranked = Object.entries(state.scores).sort((a,b)=>b[1]-a[1]).filter(([,v])=>v>0);
   const [topId, topScore] = ranked[0];
   const top = CLASSES[topId];
-  const runners = ranked.slice(1,4).map(([id,v])=>({...CLASSES[id],score:v}));
+
+  // Softmax over ALL positive-scoring classes so percentages sum to 100 across the full distribution
+  const distAll = softmax(ranked, 3);
+  const dist = distAll.slice(0, 5);   // show top 5 in the bar chart
+  const topPct = Math.round(distAll[0][1] * 100);
 
   const el = document.createElement("div");
   el.className = "card fade";
@@ -671,7 +718,7 @@ function renderResult(){
       <div class="star-row">
         <span>刷图 <b>${"★".repeat(Math.round(top.stars.farm))}${"☆".repeat(5-Math.round(top.stars.farm))}</b></span>
         <span>后期 <b>${"★".repeat(Math.round(top.stars.late))}${"☆".repeat(5-Math.round(top.stars.late))}</b></span>
-        <span>匹配度 <b>${topScore} 分</b></span>
+        <span>契合度 <b>${topPct}%</b></span>
       </div>
       <p class="tagline">"${top.tagline}"</p>
     </div>
@@ -683,17 +730,20 @@ function renderResult(){
       <div class="pros"><h4>核心优势</h4>${top.pros.map(p=>"· "+p).join("<br>")}</div>
       <div class="cons"><h4>主要劣势</h4>${top.cons.map(p=>"· "+p).join("<br>")}</div>
     </div>
-    ${runners.length ? `
-      <div class="runner-ups">
-        <h3>你的次选</h3>
-        <div class="runner-list">
-          ${runners.map(r=>`
-            <span class="runner-tag">
-              <img src="${IMG}${r.item}${RS}" alt="${r.name}" />
-              <b>${r.name}</b>${r.score} 分 · ${r.cat}
-            </span>`).join("")}
-        </div>
-      </div>` : ""}
+    <div class="match-dist">
+      <h3>完整匹配分布 <span class="hint">softmax · 越像你越高</span></h3>
+      ${dist.map(([id, p], idx)=>{
+        const c = CLASSES[id];
+        const pct = Math.round(p * 100);
+        return `
+          <div class="match-row${idx===0?" top":""}">
+            <img src="${IMG}${c.item}${RS}" alt="" />
+            <span class="n">${c.name}</span>
+            <div class="b"><i style="--pct:${pct}%"></i></div>
+            <span class="p">${pct}%</span>
+          </div>`;
+      }).join("")}
+    </div>
     <div class="share-row">
       <button class="btn btn-ghost" id="btn-share">复制结果</button>
       <button class="btn btn-primary" id="btn-again" style="padding:10px 20px;font-size:13px;letter-spacing:.1em">再测一次</button>
@@ -708,7 +758,7 @@ function renderResult(){
     render();
   };
   el.querySelector("#btn-share").onclick = async ()=>{
-    const text = `我在《冒险岛怀旧服职业测试》里的结果是 【${top.name}】(${top.cat}) —— ${top.tagline}`;
+    const text = `我在《冒险岛怀旧服职业测试》里的结果是 【${top.name}】(${top.cat}) —— 契合度 ${topPct}%。${top.tagline}`;
     try {
       await navigator.clipboard.writeText(text);
       el.querySelector("#btn-share").textContent = "已复制 ✓";
